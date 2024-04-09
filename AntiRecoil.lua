@@ -13,7 +13,7 @@ setmetatable(   NoRecoil, {
     end,
 })
 
-
+-- values for guns, where { move X, move Y, delay time}
 local presets = {
     ["H0300"] = {0,20,200},
     ["Z0300"] = {0,15,200},
@@ -30,7 +30,9 @@ local presets = {
     ["H1100"] = {0,12,54},
     ["Z1100"] = {0,9,54},
 }
-
+-- Below are the classes H = hipfire Z = zoomed 
+-- H1100 = hipfire for SMG with 1100 bullets per minute
+-- Z300 = Zoomed for Shotgun with 300 Bullets per minute
 local classes = { ["hip_fire"] =  { ["H1100"] = presets.H1100,
                                     ["H0900"] = presets.H0900,
                                     ["H0750"] = presets.H0750,
@@ -61,9 +63,9 @@ function NoRecoil.new(selectedClass, Gun, setPresets, setClasses) OutputLogMessa
 end
 --                <~~member functions~~>
 function NoRecoil:compensateRecoil() -- Recoil
-    local x = self.Gun[1]+math.random(-1,1)
-    local y = YY+self.Gun[2]+math.random(-1,1)
-    local t = TT+self.Gun[3]+math.random(-2,2)
+    local x = self.Gun[1]+math.random(-1,1) -- random horizontal movement on x
+    local y = YY+self.Gun[2]+math.random(-1,1) -- random vertical movement on Y, where YY is adjustable variable by using: Left Ctrl or Shift + mouse click
+    local t = TT+self.Gun[3]+math.random(-2,2) -- random in time between shots on T, where TT is adjustable variable by using: Right Ctrl or Shift + mouse click
     MoveMouseRelative(x,y)
     Sleep(t)
     OutputLogMessage(" --->  YY:%s TT:%s ---> %s  x:%s y:%s t:%s  \n", YY, TT, self.GunIndex, x,y,t )
