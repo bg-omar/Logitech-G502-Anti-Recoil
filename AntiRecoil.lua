@@ -166,18 +166,11 @@ EnablePrimaryMouseButtonEvents(true)
 local NoRecoilObject = NoRecoil(initial_Class,initial_Weapon, presets, classes)
 
 function OnEvent(event, arg)
-    if (IsModifierPressed("lshift") and NoRecoilObject:scriptState() == true) then
-        NoRecoilObject:addY()
-    end
-    if (IsModifierPressed("rctrl") and NoRecoilObject:scriptState() == true) then
-        NoRecoilObject:fasterT()
-    end
-    if (IsModifierPressed("lctrl") and NoRecoilObject:scriptState() == true) then
-        NoRecoilObject:subY()
-    end
-    if (IsModifierPressed("rshift") and NoRecoilObject:scriptState() == true) then
-        NoRecoilObject:slowerT()
-    end
+    if (IsModifierPressed("lshift") and NoRecoilObject:scriptState() == true) then NoRecoilObject:addY() end
+    if (IsModifierPressed("lctrl")  and NoRecoilObject:scriptState() == true) then NoRecoilObject:subY() end
+
+    if (IsModifierPressed("rshift") and NoRecoilObject:scriptState() == true) then NoRecoilObject:slowerT() end
+    if (IsModifierPressed("rctrl")  and NoRecoilObject:scriptState() == true) then NoRecoilObject:fasterT() end
 
     --~~switch weapon~~
     if (event == "MOUSE_BUTTON_PRESSED" and arg == 3) then
