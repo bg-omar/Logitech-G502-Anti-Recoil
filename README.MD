@@ -12,3 +12,7 @@
 ### time between shots  
 `right shift` + `mouse click`  =  +T   
 `right rctrl` + `mouse click`  =  -T   
+
+### Logitech-Ghub-Functions.json
+I've added a Logitech-Ghub-Functions.json with almost all functions for the Logitech G502 mouse,  
+these are to teach us and IntelliJ IDEA the LG-hub specific lua functions
