@@ -1,4 +1,5 @@
--- [Capslock] will enable/disable the script (reset vars)
+--     [Capslock]
+-- To enable/disable the script & reset fine-tune.
 -- Copy this entire file into LGhub script
 -- or copy only the following line into LGhub script (without --)
 
@@ -13,6 +14,9 @@
 ----------- Fine-tune time between shots --------
 -- right [Shift] + mouse click = +T
 -- right  [Ctrl] + mouse click = -T
+
+-- Show output in Logitech-Ghub console
+logging = true
 
 initial_Class = "hip_fire"
 initial_Weapon = "H0650"
@@ -61,7 +65,7 @@ local classes = { ["hip_fire"] =  { ["H1100"] = presets.H1100,
 
 -- <~~constructor~~>
 function NoRecoil.new(selectedClass, Gun, setPresets, setClasses)
-    OutputLogMessage("\n\n\n\n\n\n ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ NoRecoil.new ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+    if logging then OutputLogMessage("\n\n\n\n\n\n ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ NoRecoil.new ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n") end
     local self = setmetatable({}, NoRecoil)
     self.Presets = setPresets
     self.Classes = setClasses
@@ -73,7 +77,7 @@ function NoRecoil.new(selectedClass, Gun, setPresets, setClasses)
     c = 1
     YY = 0
     TT = 0
-    OutputLogMessage(" self.Presets  %s \n self.Classes  %s \n self.classIndex  %s \n self.GunIndex %s \n self.Gun  %s \n", self.Presets, self.Classes, self.classIndex, self.GunIndex, self.Gun)
+    if logging then OutputLogMessage(" self.Presets  %s \n self.Classes  %s \n self.classIndex  %s \n self.GunIndex %s \n self.Gun  %s \n", self.Presets, self.Classes, self.classIndex, self.GunIndex, self.Gun) end
     return self
 end
 
@@ -84,7 +88,7 @@ function NoRecoil:compensateRecoil()
     local t = TT + self.Gun[3] + math.random(-2, 2) -- random in time between shots on T
     MoveMouseRelative(x, y)
     Sleep(t)
-    OutputLogMessage(" --->  YY:%s TT:%s ---> %s  x:%s y:%s t:%s  \n", YY, TT, self.GunIndex, x, y, t)
+    if logging then OutputLogMessage(" --->  YY:%s TT:%s ---> %s  x:%s y:%s t:%s  \n", YY, TT, self.GunIndex, x, y, t) end
 end
 
 -- ~~getters~~
@@ -93,8 +97,11 @@ function NoRecoil:currentClass()  return self.classIndex  end
 function NoRecoil:scriptState()  return self.noRecoilBool  end
 
 -- ~~setters~~
-function NoRecoil:startScript()  self.noRecoilBool = true  end
+function NoRecoil:startScript()
+    if logging and self.noRecoilBool == false then OutputLogMessage("\n Start \n") end
+    self.noRecoilBool = true  end
 function NoRecoil:stopScript()
+    if logging and self.noRecoilBool == true then OutputLogMessage("\n Finished \n") end
     self.noRecoilBool = false
     self:resetTY()
 end
@@ -120,7 +127,7 @@ function NoRecoil:setClass()
         if c == 1 then self.classIndex = 'hip_fire'
     elseif c == 2 then self.classIndex = 'zoomed'
     end
-    OutputLogMessage(" ---------------------- Class() --------------------------------------------------------'%s' '%s' '%s' '%s'\n\n ", g, c, self.GunIndex, self.classIndex)
+    if logging then OutputLogMessage(" ---------------------- Class() --------------------------------------------------------'%s' '%s' '%s' '%s'\n\n ", g, c, self.GunIndex, self.classIndex) end
 end
 
 function NoRecoil:setGun()
@@ -156,8 +163,7 @@ function NoRecoil:setGun()
     end
 
     self.Gun = self.Classes[self.classIndex][self.GunIndex]
-    OutputLogMessage(" ********************** Gun() *************************************************************************** %s %s \n\n ", g, self.GunIndex)
-
+    if logging then OutputLogMessage(" ********************** Gun() *************************************************************************** %s %s \n\n ", g, self.GunIndex) end
 end
 
 function NoRecoil:setZoomGun()
@@ -176,7 +182,7 @@ function NoRecoil:setZoomGun()
     end
 
     self.Gun = self.Classes[self.classIndex][self.GunIndex]
-    OutputLogMessage(" ********************** Endof setZoomGun() *************************************************************************** %s %s \n\n ", g, self.GunIndex)
+    if logging then OutputLogMessage(" ********************** Endof setZoomGun() *************************************************************************** %s %s \n\n ", g, self.GunIndex) end
 end
 
 function NoRecoil:setHipGun()
@@ -195,7 +201,7 @@ function NoRecoil:setHipGun()
     end
 
     self.Gun = self.Classes[self.classIndex][self.GunIndex]
-    OutputLogMessage(" ********************** Endof setHipGun() *************************************************************************** %s %s \n\n ", g, self.GunIndex)
+    if logging then OutputLogMessage(" ********************** Endof setHipGun() *************************************************************************** %s %s \n\n ", g, self.GunIndex) end
 end
 
 -- ----------------------------------------------------------------~~start of main program~~ ------------------------------------------------------------
@@ -212,20 +218,18 @@ function OnEvent(event, arg)
 
     --~~switch weapon~~
     if (event == "MOUSE_BUTTON_PRESSED" and arg == 3) then
-        NoRecoilObject:setGun() OutputLogMessage("[+] You have switched weapons: %s\n", NoRecoilObject:currentWeapon())
+        NoRecoilObject:setGun() if logging then OutputLogMessage("[+] You have switched weapons: %s\n", NoRecoilObject:currentWeapon()) end
     end
     --~~press zoom~~
     if (event == "MOUSE_BUTTON_PRESSED" and arg == 2 and NoRecoilObject:scriptState() == true) then
-        NoRecoilObject:setClass() NoRecoilObject:setZoomGun() OutputLogMessage("[+] Zoom Classes: %s\n", NoRecoilObject:currentClass())
+        NoRecoilObject:setClass() NoRecoilObject:setZoomGun() if logging then OutputLogMessage("[+] Zoom Classes: %s\n", NoRecoilObject:currentClass()) end
     end
     --~~release zoom~~
     if (event == "MOUSE_BUTTON_RELEASED" and arg == 2 and NoRecoilObject:scriptState() == true) then
-        NoRecoilObject:setClass() NoRecoilObject:setHipGun() OutputLogMessage("[+] Hip  Classes: %s\n", NoRecoilObject:currentClass())
+        NoRecoilObject:setClass() NoRecoilObject:setHipGun() if logging then OutputLogMessage("[+] Hip  Classes: %s\n", NoRecoilObject:currentClass()) end
     end
-
     --~~toggle script~~
-    if IsKeyLockOn("CapsLock")
-    then NoRecoilObject:startScript()
+    if IsKeyLockOn("CapsLock") then NoRecoilObject:startScript()
     else NoRecoilObject:stopScript() NoRecoilObject:resetTY()
     end
     --~~execute script~~ // Old Script
